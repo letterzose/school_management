@@ -14,12 +14,23 @@ import org.springframework.stereotype.Service;
 public class DepartmentService {
     @Autowired DepartmentMapper mapper;
 
-    public Map<String, Object> getDepartmentList(Integer offset) {
-        if(offset == null) offset = 0;
+    public Map<String, Object> getDepartmentList(Integer offset, String keyword) {
         Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
-        List<DepartmentVO> list = mapper.getDepartmentInfo(offset);
+        if(offset == null) {
+            offset = 0;
+            resultMap.put("offset", offset);
+        }
+        if(keyword == null) {
+            keyword = "%%";
+            resultMap.put("keyword", "");
+        }
+        else {
+            resultMap.put("keyword", keyword);
+            keyword = "%"+keyword+"%";
+        }
+        List<DepartmentVO> list = mapper.getDepartmentInfo(offset, keyword);
 
-        Integer cnt = mapper.getDepartmentCount();
+        Integer cnt = mapper.getDepartmentCount(keyword);
         Integer page_cnt = cnt / 10;
         if(cnt % 10 > 0) page_cnt++;
 
@@ -60,6 +71,25 @@ public class DepartmentService {
         mapper.deleteDepartment(seq);
         resultMap.put("status", true);
         resultMap.put("message", "학과가 삭제되었습니다.");
+        return resultMap;
+    }
+
+    public Map<String, Object> getDepartmentInfoBySeq(Integer seq) {
+        Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
+        // return mapper.getDepartmentInfoBySeq(seq);
+
+        resultMap.put("status", true);
+        resultMap.put("data", mapper.getDepartmentInfoBySeq(seq));
+        return resultMap;
+    }
+
+    public Map<String, Object> updateDepartmentInfo(DepartmentVO data) {
+        Map<String, Object> resultMap = new LinkedHashMap<String, Object>();
+
+        mapper.updateDepartment(data);
+
+        resultMap.put("status", true);
+        resultMap.put("message", "수정되었습니다.");
         return resultMap;
     }
 }
