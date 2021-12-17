@@ -3,6 +3,7 @@ package com.greenarrt.school_management.controller;
 import java.util.Map;
 
 import com.greenarrt.school_management.service.DepartmentService;
+import com.greenarrt.school_management.utils.AESAlgorithm;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
